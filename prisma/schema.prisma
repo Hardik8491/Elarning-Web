@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Auth
+model User {
+  id                String          @id @default(cuid())
+  name              String?
+  email             String?         @unique
+  password          String?
+  phoneNumber       String?
+  emailVerified     Boolean?
+  userImage         String?
+  students          Student[]       @relation("UserToStudent") // User can have multiple students
+  questionnaires    Questionnaire[] // User can have multiple questionnaires
+  gender            String?
+  birthday          DateTime?
+  language          String?
+  country           String?
+  emailNotification Boolean?
+  privateAccount    Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+// schema.prisma
+model ResetToken {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String
+  createdAt DateTime @default(now())
+}
+
+
+
+// Student Data
+model Student {
+  id           String     @id @default(uuid())
+  name         String     @unique
+  image        String?
+  grade        String?
+  enrollmentNo String?
+  mobileNumber String?    @unique
+  fatherName   String?
+  birthdate    DateTime?  @db.Date
+  userId       String? // User ID to establish the relationship
+  user         User?      @relation("UserToStudent", fields: [userId], references: [id])
+  responses    Response[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([grade, enrollmentNo, mobileNumber]) // Optional composite index
+}
+
+// Define the questionnaire model
+model Questionnaire {
+  id            String     @id @default(uuid())
+  createdAt     DateTime   @default(now())
+  questions     Question[]
+  user          User?      @relation(fields: [userId], references: [id])
+  userId        String?
+  questionName  String
+  age           Int
+  startDateTime DateTime
+  endDateTime   DateTime
+}
+
+// Define the question model
+model Question {
+  id              Int           @id @default(autoincrement())
+  question        String
+  type            String
+  options         String[]
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
+  questionnaireId String
+  skills          String
+}
+
+// This is the data model for the Response entity
+model Response {
+  id               Int                @id @default(autoincrement())
+  student          Student            @relation(fields: [studentId], references: [id])
+  studentId        String
+  responseQuestion ResponseQuestion[]
+  createdAt        DateTime           @default(now())
+
+  @@unique([studentId])
+}
+
+model ResponseQuestion {
+  id         Int      @id @default(autoincrement())
+  question   String
+  response   Response @relation(fields: [responseId], references: [id])
+  responses  String[]
+  responseId Int
+}
