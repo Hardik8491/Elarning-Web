@@ -31,7 +31,7 @@ export function Reset() {
                     Thank you for using our services!
                 </p>
                 <div className='flex justify-center'>
-                    <Link href='/login'>
+                    <Link href='/auth/login'>
                         <Button className='w-full' variant='default'>
                             Log in now
                         </Button>

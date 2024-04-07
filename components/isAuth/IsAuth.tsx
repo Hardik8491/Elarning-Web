@@ -15,7 +15,7 @@ const useAuthentication = (session: { status: unknown }) => {
   useEffect(() => {
     if (session.status === "unauthenticated") {
       showWarningToast("Login First !!")
-      redirect("/login")
+      redirect("/auth/login")
 
     }
   }, [session.status]);

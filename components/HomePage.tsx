@@ -15,8 +15,8 @@ const HomePage: React.FC<HomePageProps> = () => {
              <h2 className='text-4xl font-extrabold text-white'>Musch Essior</h2>
              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum exercitationem magni unde eligendi?</p>
              <div className='flex items-center justify-center gap-4 text-black'>
-              <button onClick={()=>router.push("/login")} className='rounded-full py-2 px-5 bg-gray-200 '>Join Free</button>
-              <button onClick={()=>router.push("/login")} className='rounded-full py-2 px-5 bg-gray-200 '>Join Free</button>
+              <button onClick={()=>router.push("/auth/login")} className='rounded-full py-2 px-5 bg-gray-200 '>Join Free</button>
+              <button onClick={()=>router.push("/auth/login")} className='rounded-full py-2 px-5 bg-gray-200 '>Join Free</button>
              </div>
          </div>
          <div className='flex-1 px-1   items-center flex justify-center '>

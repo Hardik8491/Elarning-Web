@@ -5,6 +5,7 @@ import NextAuth, { AuthOptions, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
+import axios from "axios";
 
 export const authOptions: AuthOptions = {
   session: {
@@ -23,9 +24,9 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         console.log("Sign in...");
-        
+
         console.log(credentials);
-        
+
         if (!credentials?.email || !credentials.password) {
           return null;
         }
@@ -56,16 +57,17 @@ export const authOptions: AuthOptions = {
           randomKey: "Hey cool",
         };
       },
-      
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
     FacebookProvider({
-      clientId:  "3624695014435898" || process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: "bd7407e6049c8b1b7d07bf65f81388db" || process.env.FACEBOOK_CLIENT_SECRET as string,
-    
+      clientId:
+        "3624695014435898" || (process.env.FACEBOOK_CLIENT_ID as string),
+      clientSecret:
+        "bd7407e6049c8b1b7d07bf65f81388db" ||
+        (process.env.FACEBOOK_CLIENT_SECRET as string),
     }),
   ],
   secret: "HARDIK8491",
@@ -91,6 +93,21 @@ export const authOptions: AuthOptions = {
       }
       return token;
     },
+    async signIn({ user, profile, account, credentials }) {
+      console.log(user, "FROM SIGNIN CALLBACK CONSOLE");
+
+      try {
+        const GoogleUserLoginDataToBackend = await axios.post(
+          `http://localhost:3000/api/auth-user`,
+          {
+            email: user.email,
+          }
+        );
+        // console.log(GoogleUserLoginDataToBackend, "flask backend call");
+      } catch (err) {
+        console.log(err);
+      }
+      return true;
+    },
   },
 };
-
