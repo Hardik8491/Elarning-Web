@@ -144,7 +144,7 @@ const NewStudent: React.FC = () => {
       <hr className="mb-10 " />
 
       <form onSubmit={handleSubmit} className="mb-4  w-full gap-10">
-        <div className="mb-4  gap-10 w-full grid grid-cols-3">
+        <div className="mb-4  gap-10 w-full grid  sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col py-2 ">
             <label htmlFor="Name">FullName</label>
             <input

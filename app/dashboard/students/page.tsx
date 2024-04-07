@@ -181,7 +181,7 @@ const StudentsPage: React.FC = () => {
 
             {students.length !== 0 ? (
                 <ul
-                    className={`${isGrid ? "grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 " : "flex flex-col"}`}
+                    className={`${isGrid ? "grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 " : "flex flex-col gap-4"}`}
                 >
                     {students &&
                         students.map((student, idx) => (
