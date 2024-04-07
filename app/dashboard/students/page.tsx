@@ -121,7 +121,7 @@ const StudentsPage: React.FC = () => {
                     <button
                         className='px-6 md:px-8 font-semibold text-sm py-2 rounded-md border bg-white text-blue-600'
                         onClick={() =>
-                            router.push(`/dashboard/students/newStudent`)
+                            router.push(`/dashboard/students/add`)
                         }
                     >
                         + ADD NEW
@@ -181,13 +181,18 @@ const StudentsPage: React.FC = () => {
 
             {students.length !== 0 ? (
                 <ul
-                    className={`${isGrid ? "grid grid-cols-3 gap-4" : "flex flex-col"}`}
+                    className={`${isGrid ? "grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 " : "flex flex-col"}`}
                 >
                     {students &&
                         students.map((student, idx) => (
                             <div
                                 key={idx}
-                                className=' flex flex-col w-full border bg-white  rounded-md'
+                                onClick={() =>
+                                    router.push(
+                                        `/${student.id}/worksheet`
+                                    )
+                                }
+                                className=' flex flex-col w-full border bg-white  rounded-md active:border-2 hover:border-blue-400 hover:border-2 active:border-black'
                             >
                                 <div className='flex p-4 w-full'>
                                     <div className='relative'>
@@ -276,7 +281,7 @@ const StudentsPage: React.FC = () => {
                     <div>
                         <Button
                             onClick={() =>
-                                router.push(`/dashboard/students/newStudent`)
+                                router.push(`/dashboard/students/add`)
                             }
                         >
                             ADD Students

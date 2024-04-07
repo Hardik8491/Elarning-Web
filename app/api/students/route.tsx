@@ -29,7 +29,7 @@ export async function POST(req: Request, res: NextApiResponse) {
       fatherName,
       mobileNumber,
       birthdate,
-      email,
+     
     } = body;
 
   
@@ -38,6 +38,8 @@ export async function POST(req: Request, res: NextApiResponse) {
 
 
     const userId = currentUser.user?.id;
+    console.log(userId);
+    
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -81,6 +83,7 @@ export async function POST(req: Request, res: NextApiResponse) {
       },
     });
 
+ 
     return NextResponse.json(
       { student: createdStudent, message: "Student Created Successfully" },
       { status: 201 }
