@@ -54,7 +54,6 @@ export const authOptions: AuthOptions = {
           id: user.id + "",
           email: user.email,
           name: user.name,
-          randomKey: "Hey cool",
         };
       },
     }),
@@ -72,12 +71,67 @@ export const authOptions: AuthOptions = {
   ],
   secret: "HARDIK8491",
   callbacks: {
-    session: ({ session, token }) => {
+    async signIn({ user, profile, account, credentials }): Promise<boolean> {
+      try {
+        const newUserResponse = await axios.get(
+          `http://localhost:3000/api/auth-user`,
+          {
+            params: {
+              email: user.email,
+            },
+          }
+        );
+
+        // If user data doesn't exist or if the email doesn't match, create a new user
+        if (
+          !newUserResponse.data ||
+          user.email !== newUserResponse.data.user.email
+        ) {
+          const createUserResponse = await axios.post(
+            `http://localhost:3000/api/user`,
+            {
+              email: user.email,
+              name: user.name,
+              password: user.name, // Assuming password is same as name for simplicity
+              confirmPassword: user.name, // Assuming confirmPassword is same as password
+              phoneNumber: "123456789",
+            }
+          );
+
+          // Check if user creation was successful
+          if (!createUserResponse.data || !createUserResponse.data.user) {
+            console.error("User creation failed.");
+            return false;
+          }
+
+          return createUserResponse.data.user; // Return newly created user
+        }
+
+        // Fetch the updated user data
+        const updatedUser = newUserResponse.data.user;
+        console.log(updatedUser);
+
+        // Return the updated user data to update the session
+        return updatedUser;
+      } catch (error) {
+        console.error("Error during sign-in:", error);
+        return false;
+      }
+    },
+
+    session: async ({ session, token }) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          // Use a unique identifier from the database (e.g., email or ID)
+          email: token?.email as string,
+        },
+      });
+
       return {
         ...session,
         user: {
           ...session.user,
-          id: token.id,
+          id: user?.id,
           randomKey: token.randomKey,
         },
       };
@@ -92,22 +146,6 @@ export const authOptions: AuthOptions = {
         };
       }
       return token;
-    },
-    async signIn({ user, profile, account, credentials }) {
-      console.log(user, "FROM SIGNIN CALLBACK CONSOLE");
-
-      try {
-        const GoogleUserLoginDataToBackend = await axios.post(
-          `http://localhost:3000/api/auth-user`,
-          {
-            email: user.email,
-          }
-        );
-        // console.log(GoogleUserLoginDataToBackend, "flask backend call");
-      } catch (err) {
-        console.log(err);
-      }
-      return true;
     },
   },
 };

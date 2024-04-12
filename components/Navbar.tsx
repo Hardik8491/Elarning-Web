@@ -1,6 +1,6 @@
 "use client";
 
-import DashboardMenus from "@/utils/contstants";
+
 import { ChevronLeft, HexagonIcon, MenuIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button_student";
 import { UserNav } from "./ui/user-nav";
+import DashboardMenus from "@/utils/contstants";
 const Navbar = () => {
   const path = usePathname();
   const { data: session, status } = useSession();

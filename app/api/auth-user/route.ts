@@ -7,15 +7,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 export async function POST(req: Request) {
-  
-
   try {
     const body = await req.json();
     const validatedData = body; // Validate request body
 
-    const {
-    email
-    } = validatedData;
+    const { email } = validatedData;
 
     const existingUserByEmail = await prismadb.user.findUnique({
       where: { email: email },
@@ -28,13 +24,9 @@ export async function POST(req: Request) {
       );
     }
 
-
-
-    
-
-    const newUser = await prismadb.AuthUser.create({
+    const newUser = await prismadb.authUser.create({
       data: {
-       email
+        email,
       },
     });
 
@@ -53,89 +45,21 @@ export async function POST(req: Request) {
 
 // pages/api/user.js
 
-export async function PATCH(req: Request, res: Response) {
-  const currentUser: { id?: string } = (await getServerSession(
-    authOptions
-  )) as { id?: string };
-
-  const body = await req.json();
-
-  const {
-    name,
-    email,
-    gender,
-    birthday,
-    language,
-    phoneNumber,
-    emailVerified,
-    userImage,
-    country,
-    currentPassword,
-    newPassword,
-    confirmPassword,
-    emailNotification,
-    privateAccount,
-  } = body;
-
-  const date = new Date(birthday);
-  const isoDateString = date.toISOString();
-
-
-
-
+export async function GET(req:any) {
   try {
+    const url = new URL(req.url);
 
-    // Simulated update operation
-    const updatedUser = await prismadb.user.update({
-      where: {
-        id: currentUser?.user?.id
-      },
-      // Assuming 'id' is the primary key of the User model
+    const searchParams = new URLSearchParams(url.search);
 
-      data: {
-        name,
-        email,
-        gender,
-        phoneNumber,
-        emailVerified,
-        userImage,
-        birthday:isoDateString, // Add the 'birthday' property here
-        language,
-        country,
-        password: currentPassword,
-        emailNotification,
-        privateAccount,
-
-        // Add other user fields here
-      },
-    });
-
-    // Send back the updated user data
-    return NextResponse.json(
-      { user: updatedUser, message: "User information updated successfully" },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { message: "Error updating user information:", error },
-      { status: 500 }
-    );
-  }
-}
-
-
-
-export async function GET() {
-  try {
-    const currentUser = (await getServerSession(authOptions)) as { id?: string };
-
-
+    const email = searchParams.get("email");
+    console.log(email);
+    
     const user = await prismadb.user.findUnique({
       where: {
-        id: currentUser?.user?.id,
+        email: email,
       },
     });
+    console.log(user);
 
     if (!user) {
       // Handle case where user is not found

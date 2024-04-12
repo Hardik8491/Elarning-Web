@@ -36,12 +36,12 @@ export async function POST(req: Request) {
       where: { email: email },
     });
 
-    if (existingUserByEmail) {
-      return NextResponse.json(
-        { user: null, message: "User already exists" },
-        { status: 409 }
-      );
-    }
+    // if (existingUserByEmail) {
+    //   return NextResponse.json(
+    //     { user: null, message: "User already exists" },
+    //     { status: 409 }
+    //   );
+    // }
 
     if (password !== confirmPassword) {
       return NextResponse.json(
@@ -79,9 +79,10 @@ export async function POST(req: Request) {
 // pages/api/user.js
 
 export async function PATCH(req: Request, res: Response) {
-  const currentUser: { id?: string } = (await getServerSession(
-    authOptions
-  )) as { id?: string };
+  const currentUser: {
+    user: any;
+    id?: string;
+  } = (await getServerSession(authOptions)) as { id?: string };
 
   const body = await req.json();
 
@@ -105,15 +106,11 @@ export async function PATCH(req: Request, res: Response) {
   const date = new Date(birthday);
   const isoDateString = date.toISOString();
 
-
-
-
   try {
-
     // Simulated update operation
     const updatedUser = await prismadb.user.update({
       where: {
-        id: currentUser?.user?.id
+        id: currentUser?.user?.id as string,
       },
       // Assuming 'id' is the primary key of the User model
 
@@ -124,7 +121,7 @@ export async function PATCH(req: Request, res: Response) {
         phoneNumber,
         emailVerified,
         userImage,
-        birthday:isoDateString, // Add the 'birthday' property here
+        birthday: isoDateString, // Add the 'birthday' property here
         language,
         country,
         password: currentPassword,
@@ -149,12 +146,12 @@ export async function PATCH(req: Request, res: Response) {
   }
 }
 
-
-
 export async function GET() {
   try {
-    const currentUser = (await getServerSession(authOptions)) as { id?: string };
-
+    const currentUser = (await getServerSession(authOptions)) as {
+      user: any;
+      id?: string;
+    };
 
     const user = await prismadb.user.findUnique({
       where: {

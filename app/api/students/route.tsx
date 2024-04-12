@@ -20,6 +20,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     const currentUser: { id?: string } = (await getServerSession(
       authOptions
     )) as { id?: string };
+ console.log(currentUser);
  
     const {
       name,

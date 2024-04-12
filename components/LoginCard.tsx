@@ -1,3 +1,4 @@
+"use client";
 import useWarningToast from "@/lib/warningToast";
 import { LockClosedIcon, MagnifyingGlassIcon } from "@heroicons/react/16/solid";
 import { signIn, useSession } from "next-auth/react";
@@ -12,7 +13,6 @@ import { z } from "zod";
 const LoginCard = () => {
   const showWarningToast = useWarningToast();
   const router = useRouter();
-  const session = useSession();
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,7 +22,7 @@ const LoginCard = () => {
 
   const [emailInPutError, setEmailInputError] = useState(false);
   const [passwordInPutError, setPasswordInputError] = useState(false);
-
+  const { data: session, status, update } = useSession();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   useEffect(() => {
@@ -57,7 +57,6 @@ const LoginCard = () => {
         console.error("Facebook login error:", result?.error);
         // Handle login errors (optional)
       } else {
-        // Login successful!
       }
     } catch (error) {
       console.log(error);
