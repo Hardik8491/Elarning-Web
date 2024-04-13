@@ -74,7 +74,7 @@ export const authOptions: AuthOptions = {
     async signIn({ user, profile, account, credentials }): Promise<boolean> {
       try {
         const newUserResponse = await axios.get(
-          `http://localhost:3000/api/auth-user`,
+          `${process.env.NEXT_PUBLIC_URL}/api/auth-user`,
           {
             params: {
               email: user.email,
@@ -88,7 +88,7 @@ export const authOptions: AuthOptions = {
           user.email !== newUserResponse.data.user.email
         ) {
           const createUserResponse = await axios.post(
-            `http://localhost:3000/api/user`,
+            `${process.env.NEXT_PUBLIC_URL}/api/user`,
             {
               email: user.email,
               name: user.name,
