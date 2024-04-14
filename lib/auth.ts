@@ -109,7 +109,7 @@ export const authOptions: AuthOptions = {
 
         // Fetch the updated user data
         const updatedUser = newUserResponse.data.user;
-        console.log(updatedUser);
+       ;
 
         // Return the updated user data to update the session
         return updatedUser;
