@@ -34,7 +34,10 @@ const WorkSheets = () => {
             </div>
             <div className="py-2  bg-blue-50 w-full ">
               <div className=" text-gray-700 justify-around  flex px-6 items-center">
-                <Link href="/student">
+                <Link
+                  href="/test.pdf"
+                  download="worksheet"
+                >
                   <button className="flex items-center text-xs font-semibold justify-center gap-1">
                     <span>
                       <Download />
@@ -55,7 +58,7 @@ const WorkSheets = () => {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center items-center mt-20 text-black gap-10">
+          <div className=" sm:hidden flex flex-col justify-center items-center mt-20 text-black gap-10">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-medium text-center">
               No WorkSheet Left !!
             </h1>
