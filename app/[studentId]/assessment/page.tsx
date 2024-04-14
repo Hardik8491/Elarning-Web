@@ -8,6 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useParams } from "next/navigation";
 import { Clock } from "lucide-react";
+import useAuthentication from "@/components/isAuth/IsAuth";
+import { useSession } from "next-auth/react";
 
 // Define the Question interface
 interface Question {
@@ -24,15 +26,20 @@ interface Question {
 function Assessment(): JSX.Element {
   const params = useParams();
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [responses, setResponses] = useState<{ [key: string]: string[] | null | string }>({});
-
+  const [responses, setResponses] = useState<{
+    [key: string]: string[] | null | string;
+  }>({});
+  const session = useSession();
+  useAuthentication(session);
   // Fetch questionnaire data from the server
   useEffect(() => {
     async function fetchData() {
       try {
         const questionnaireResponse = await axios.get("/api/Questionnaire");
         const questionnaireId = questionnaireResponse.data[1].id;
-        const questionsResponse = await axios.get(`/api/questions?questionnaireId=${questionnaireId}`);
+        const questionsResponse = await axios.get(
+          `/api/questions?questionnaireId=${questionnaireId}`
+        );
         setQuestions(
           questionsResponse.data.map((question: any) => ({
             ...question,
@@ -61,7 +68,10 @@ function Assessment(): JSX.Element {
   };
 
   // Function to handle checkbox change
-  const handleCheckboxChange = (questionId: string, selectedOptions: string[]) => {
+  const handleCheckboxChange = (
+    questionId: string,
+    selectedOptions: string[]
+  ) => {
     const updatedQuestions = questions.map((question) => {
       if (question.id === questionId) {
         return { ...question, selectedOptions };
@@ -92,14 +102,13 @@ function Assessment(): JSX.Element {
         questions: questions.map((question) => ({
           questionId: question.id,
           question: question.question,
-          response: Array.isArray(responses[question.id]) ? responses[question.id] : [responses[question.id]] || null
-        }))
+          response: Array.isArray(responses[question.id])
+            ? responses[question.id]
+            : [responses[question.id]] || null,
+        })),
       });
 
-
-
       if (response.status === 201) {
-     
       } else {
         console.error("Unexpected status code:", response.status);
       }
@@ -111,15 +120,12 @@ function Assessment(): JSX.Element {
   return (
     <div className="bg-white my-4 mt-24 p-8 rounded-lg border shadow-md max-w-4xl mx-auto">
       <div className="flex  mb-10 items-center font-bold text-base border p-2  rounded-xl  justify-between">
-
         <h2>Assessment Test</h2>
         <div className="flex items-center  gap-2">
           <span>
             <Clock />
           </span>
-          <span>
-            12-02-2023 12:09:04
-          </span>
+          <span>12-02-2023 12:09:04</span>
         </div>
       </div>
       <form className="space-y-8" onSubmit={handleSubmit}>
@@ -135,11 +141,13 @@ function Assessment(): JSX.Element {
                   {question.options?.map((optionText, index) => (
                     <React.Fragment key={index}>
                       <RadioGroupItem
-                      className="text-black"
+                        className="text-black"
                         id={`option_${index}`}
                         value={optionText}
                         checked={question.selectedOption === optionText}
-                        onClick={() => handleOptionChange(question.id, optionText)}
+                        onClick={() =>
+                          handleOptionChange(question.id, optionText)
+                        }
                       />
                       <Label htmlFor={`option_${index}`}>{optionText}</Label>
                     </React.Fragment>
@@ -152,15 +160,19 @@ function Assessment(): JSX.Element {
                 {question.options?.map((optionText, index) => (
                   <div key={index} className="flex gap-1 items-center">
                     <input
-                    className="text-black bg-black "
+                      className="text-black bg-black "
                       type="checkbox"
                       id={`checkbox_${index}`}
-                      checked={question.selectedOptions?.includes(optionText) || false}
+                      checked={
+                        question.selectedOptions?.includes(optionText) || false
+                      }
                       onChange={(e) => {
                         const checked = e.target.checked;
                         const selectedOptions = checked
                           ? [...(question.selectedOptions || []), optionText]
-                          : (question.selectedOptions || []).filter((item) => item !== optionText);
+                          : (question.selectedOptions || []).filter(
+                              (item) => item !== optionText
+                            );
                         handleCheckboxChange(question.id, selectedOptions);
                       }}
                     />
@@ -172,20 +184,18 @@ function Assessment(): JSX.Element {
             {question.type === "range" && question.options && (
               <div>
                 <input
-                className="text-black"
+                  className="text-black"
                   type="range"
                   min={question.options[0]} // Minimum value is the first option
                   max={question.options[question.options.length - 1]} // Maximum value is the last option
                   value={question.sliderValue}
-                  onChange={(e) => handleSliderChange(question.id, (e.target.value))}
+                  onChange={(e) =>
+                    handleSliderChange(question.id, e.target.value)
+                  }
                 />
                 <p>Current Value: {question.sliderValue}</p>
               </div>
             )}
-
-
-
-
           </div>
         ))}
         <div className="flex justify-center">

@@ -1,7 +1,9 @@
 "use client";
+import useAuthentication from "@/components/isAuth/IsAuth";
 import Button from "@/components/ui/Button1";
 import Container from "@/components/ui/container";
 import { Download, Eye, MessageSquareText } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -9,6 +11,8 @@ import React from "react";
 
 const WorkSheets = () => {
   const params = useParams();
+  const session=useSession();
+  useAuthentication(session);
   //  studentId: params.studentId,
   return (
     <div className="bg-white min-h-screen w-full">
