@@ -61,10 +61,6 @@ export async function GET(req:any) {
     });
     console.log(user);
 
-    if (!user) {
-      // Handle case where user is not found
-      return new NextResponse("User not found", { status: 404 });
-    }
 
     return NextResponse.json(
       { user: user, message: "User information updated successfully" },

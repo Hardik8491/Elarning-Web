@@ -25,9 +25,12 @@ const LoginCard = () => {
   const { data: session, status, update } = useSession();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
+  
+
   useEffect(() => {
     if (session) {
       setIsLoggedIn(true);
+      router.push("/")
     } else {
       setIsLoggedIn(false);
     }

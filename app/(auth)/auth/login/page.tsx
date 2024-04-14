@@ -12,20 +12,21 @@ import { RegisterCard } from "@/components/component/register-card";
 interface LoginPageProps {}
 
 const LoginPage: React.FC<LoginPageProps> = () => {
-    const session = useSession();
+  const session = useSession();
+  const router = useRouter();
 
-    useEffect(() => {
-        if (session.status === "authenticated") {
-            toast.success("Login Successful !!");
-            redirect("/");
-        }
-    }, [session.status]);
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      toast.success("Login Successful !!");
+      router.push("/");
+    }
+  }, [session.status]);
 
-    return (
-        <>
-            <RegisterCard />
-        </>
-    );
+  return (
+    <>
+      <RegisterCard />
+    </>
+  );
 };
 
 export default LoginPage;

@@ -73,6 +73,8 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async signIn({ user, profile, account, credentials }): Promise<boolean> {
       try {
+        console.log(user.email);
+
         const newUserResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_URL}/api/auth-user`,
           {
@@ -81,10 +83,16 @@ export const authOptions: AuthOptions = {
             },
           }
         );
+        if (newUserResponse.data.user !== null) {
+          console.log(true);
+          console.log(newUserResponse.data);
+        } else {
+          console.log(false);
+        }
 
         // If user data doesn't exist or if the email doesn't match, create a new user
         if (
-          !newUserResponse.data ||
+          newUserResponse.data.user === null ||
           user.email !== newUserResponse.data.user.email
         ) {
           const createUserResponse = await axios.post(
@@ -97,19 +105,20 @@ export const authOptions: AuthOptions = {
               phoneNumber: "123456789",
             }
           );
+          console.log(createUserResponse);
 
           // Check if user creation was successful
-          if (!createUserResponse.data || !createUserResponse.data.user) {
-            console.error("User creation failed.");
-            return false;
-          }
+          // if (!createUserResponse.data || !createUserResponse.data.user) {
+          //   console.error("User creation failed.");
+          //   return false;
+          // }
 
           return createUserResponse.data.user; // Return newly created user
         }
 
         // Fetch the updated user data
         const updatedUser = newUserResponse.data.user;
-       ;
+        console.log(updatedUser);
 
         // Return the updated user data to update the session
         return updatedUser;
