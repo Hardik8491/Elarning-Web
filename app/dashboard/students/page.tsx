@@ -187,14 +187,14 @@ const StudentsPage: React.FC = () => {
                         students.map((student, idx) => (
                             <div
                                 key={idx}
-                                onClick={() =>
+                               
+                                className=' flex flex-col w-full border bg-white  rounded-md active:border-2 hover:border-blue-400 hover:border-2 active:border-black'
+                            >
+                                <div   onClick={() =>
                                     router.push(
                                         `/${student.id}/worksheet`
                                     )
-                                }
-                                className=' flex flex-col w-full border bg-white  rounded-md active:border-2 hover:border-blue-400 hover:border-2 active:border-black'
-                            >
-                                <div className='flex p-4 w-full'>
+                                } className='flex p-4 w-full'>
                                     <div className='relative'>
                                         <Image
                                             src={student.image}

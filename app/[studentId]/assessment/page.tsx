@@ -36,10 +36,14 @@ function Assessment(): JSX.Element {
     async function fetchData() {
       try {
         const questionnaireResponse = await axios.get("/api/Questionnaire");
+        console.log(questionnaireResponse);
+        
         const questionnaireId = questionnaireResponse.data[1].id;
         const questionsResponse = await axios.get(
           `/api/questions?questionnaireId=${questionnaireId}`
         );
+        console.log(questionnaireResponse);
+        
         setQuestions(
           questionsResponse.data.map((question: any) => ({
             ...question,
@@ -97,7 +101,7 @@ function Assessment(): JSX.Element {
   // Function to handle form submission
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("/api/response", {
+      const response = await axios.post("http://localhost:3000/api/response", {
         studentId: params.studentId,
         questions: questions.map((question) => ({
           questionId: question.id,
@@ -125,7 +129,7 @@ function Assessment(): JSX.Element {
           <span>
             <Clock />
           </span>
-          <span>12-02-2023 12:09:04</span>
+          <span>12-05-2023 12:09:04</span>
         </div>
       </div>
       <form className="space-y-8" onSubmit={handleSubmit}>

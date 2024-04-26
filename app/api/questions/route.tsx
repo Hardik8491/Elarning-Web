@@ -8,6 +8,8 @@ export async function GET(req: Request, res: Response) {
     const url = new URL(req.url);
 
     const searchParams = new URLSearchParams(url.search);
+console.log(searchParams);
+console.log(url);
 
     const questionnaireId = searchParams.get("questionnaireId");
 
