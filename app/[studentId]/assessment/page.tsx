@@ -36,13 +36,13 @@ function Assessment(): JSX.Element {
     async function fetchData() {
       try {
         const questionnaireResponse = await axios.get("/api/Questionnaire");
-        console.log(questionnaireResponse);
+       
         
         const questionnaireId = questionnaireResponse.data[1].id;
         const questionsResponse = await axios.get(
           `/api/questions?questionnaireId=${questionnaireId}`
         );
-        console.log(questionnaireResponse);
+       
         
         setQuestions(
           questionsResponse.data.map((question: any) => ({

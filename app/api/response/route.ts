@@ -15,7 +15,8 @@ export async function POST(req: Request) {
 
   
     
-
+    console.log(body);
+    
     const questionsData: { question: string; responses: string[] }[] = formData.questions.map((questionItem: { question: string; response: string[] }) => {
       const { question, response } = questionItem;
       return {
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
       responses: response,
       };
     });
+    
 
 
     const response = await prisma.response.create({
